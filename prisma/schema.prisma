@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model StocksName{
+  id String       @id @default(auto()) @map("_id") @db.ObjectId
+  P1 String
+  P2 String
+  P3 String
+  P4 String
+  P5 String
+  P6 String
+  P7 String
+  createdAt DateTime?  @default(now())
+  updatedAt DateTime?  @updatedAt
+}
+
+model StockData {
+  id String       @id @default(auto()) @map("_id") @db.ObjectId
+  date String?
+  opening_P1 String?
+  opening_P2 String?
+  opening_P3 String? 
+  opening_P4 String?
+  opening_P5 String?
+  opening_P6 String?
+  opening_P7 String?
+  closing_P1 String?
+  closing_P2 String?
+  closing_P3 String?
+  closing_P4 String?
+  closing_P5 String?
+  closing_P6 String?
+  closing_P7 String?
+  final_P1 Int?
+  final_P2 Int?
+  final_P3 Int?
+  final_P4 Int?
+  final_P5 Int?
+  final_P6 Int?
+  final_P7 Int?
+  createdAt DateTime?  @default(now())
+}
