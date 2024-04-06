@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { Fira_Sans, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { fontSans } from "../../config/fonts";
 import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({
