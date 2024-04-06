@@ -5,9 +5,8 @@ import { Providers } from "./providers";
 import { fontSans } from "../../config/fonts";
 import { ClerkProvider } from "@clerk/nextjs";
 
-const inter = Fira_Sans({
-  subsets: ["latin"],
-  weight: "400"
+const inter = Inter({
+  subsets: ["latin"]
 });
 
 export const metadata: Metadata = {
