@@ -22,9 +22,11 @@ interface stockData {
 export const AddStocks = ({
   stockNames,
   setIsAdded,
+  newfinalData,
 }: {
   stockNames: any;
   setIsAdded: Function;
+  newfinalData: any;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [addStockData, setStockData] = useState({
@@ -47,7 +49,6 @@ export const AddStocks = ({
   const [openingValue, setOpeningValue] = useState(0);
 
   const updateStocks = (key: string, value: number) => {
-    console.log(openingValue, "openingValue");
     if (key !== "") {
       setStockData({ ...addStockData, [key]: value });
       if (key.includes("closing")) {
@@ -64,7 +65,6 @@ export const AddStocks = ({
 
   const addStocksData = async () => {
     try {
-
       const obj = { ...addStockData, ...finalData };
       const res = await axios.post("/api/stockdata", obj);
       if (res.data.error) {
@@ -115,6 +115,19 @@ export const AddStocks = ({
     }
   };
 
+  useEffect(() => {
+    setStockData({
+      ...addStockData,
+      opening_0: newfinalData?.final_P1,
+      opening_1: newfinalData?.final_P2,
+      opening_2: newfinalData?.final_P3,
+      opening_3: newfinalData?.final_P4,
+      opening_4: newfinalData?.final_P5,
+      opening_5: newfinalData?.final_P6,
+      opening_6: newfinalData?.final_P7,
+    });
+  }, [newfinalData]);
+
   return (
     <div>
       <Button onPress={onOpen} color="primary">
@@ -152,11 +165,7 @@ export const AddStocks = ({
   );
 };
 
-const StocksOptions = ({
-  stockNames,
-  updateStocks,
-}: stockData) => {
-
+const StocksOptions = ({ stockNames, updateStocks }: stockData) => {
   const [opening, setOpeningData] = useState("");
 
   const [closing, setClosingData] = useState("");

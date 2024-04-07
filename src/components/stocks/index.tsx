@@ -29,6 +29,7 @@ export const Stocks = () => {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterValue, setFilterValue] = useState("");
+  const [newfinalData, setNewFinalData] = useState({})
   let ModifiedStockNames: any[] = [];
 
   const fetchStockNames = async () => {
@@ -36,54 +37,54 @@ export const Stocks = () => {
     let arr1 = [];
     let arr3 = [];
     try {
-      const res = await axios.get("/api/stocknames");
-      if (res.data.error) {
-        Swal.fire({
-          icon: "error",
-          title: "oops...",
-          text: `Server Error: ${res.data.error}`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-
-      if (!res.data.error) {
-        let obj = res.data[0];
-        for (let index = 0; index < Object.values(obj).length; index++) {
-          if (index > 0 && index < 8) {
-            ModifiedStockNames[index - 1] = Object.values(obj)[index];
-            array[index - 1] = (
-              <TableHeaderData
-                type={"opening"}
-                data={Object.values(obj)[index]}
-              />
-            );
-            arr1[index - 1] = (
-              <TableHeaderData
-                type={"closing"}
-                data={Object.values(obj)[index]}
-              />
-            );
-            arr3[index - 1] = (
-              <TableHeaderData
-                type={"final"}
-                data={Object.values(obj)[index]}
-              />
-            );
-          }
+      const response = await getStocknames().then((res: any) => {
+        if (res?.data?.error) {
+          Swal.fire({
+            icon: "error",
+            title: "oops...",
+            text: `Server Error: ${res.data?.error}`,
+            showConfirmButton: false,
+            timer: 1500,
+          });
         }
-        setStockNames(ModifiedStockNames);
-      }
-      const newarr = ["date", ...array, ...arr1, ...arr3, "actions"];
-      setTableHeaderNames(newarr);
-      console.log(array);
+  
+        if (!res.data.error) {
+          let obj = res.data[0];
+          for (let index = 0; index < Object.values(obj).length; index++) {
+            if (index > 0 && index < 8) {
+              ModifiedStockNames[index - 1] = Object.values(obj)[index];
+              array[index - 1] = (
+                <TableHeaderData
+                  type={"opening"}
+                  data={Object.values(obj)[index]}
+                />
+              );
+              arr1[index - 1] = (
+                <TableHeaderData
+                  type={"closing"}
+                  data={Object.values(obj)[index]}
+                />
+              );
+              arr3[index - 1] = (
+                <TableHeaderData
+                  type={"final"}
+                  data={Object.values(obj)[index]}
+                />
+              );
+            }
+          }
+          setStockNames(ModifiedStockNames);
+        }
+        const newarr = ["date", ...array, ...arr1, ...arr3, "actions"];
+        setTableHeaderNames(newarr);
+      })
     } catch (error) {
       console.error("Error Details:", error);
     }
   };
 
   const fetchStockData = async () => {
-    getStockDatas().then((res) => setStockData(res?.data?.data));
+    getStockDatas().then((res) => {setStockData(res?.data?.data), setNewFinalData(res?.data?.data[0])});
   };
 
   const deleteData = async (id: string) => {
@@ -179,7 +180,7 @@ export const Stocks = () => {
         />
         <div className="flex gap-3">
           <AddStocksCode setIsAdded={setIsAdded} />
-          <AddStocks stockNames={stockNames} setIsAdded={setIsAdded} />
+          <AddStocks stockNames={stockNames} setIsAdded={setIsAdded} newfinalData={newfinalData} />
         </div>
       </div>
       <div className="flex justify-between my-3">

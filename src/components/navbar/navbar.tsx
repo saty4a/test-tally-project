@@ -2,28 +2,38 @@ import React from "react";
 
 import {
   Navbar,
-  NavbarBrand,
   NavbarMenuToggle,
   NavbarMenuItem,
   NavbarMenu,
   NavbarContent,
   NavbarItem,
   Link,
-  Button,
 } from "@nextui-org/react";
 import { UserDropdown } from "./user-dropdown";
+import { usePathname } from "next/navigation";
+import { DarkModeSwitch } from "./darkmodeswitch";
 
 interface Props {
-    children: React.ReactNode;
-  } 
+  children: React.ReactNode;
+}
 
 const NavBarWrapper = ({ children }: Props) => {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const menuItems = [
-    "Home",
-    "Stocks",
-    "Transaction",
+    {
+      label: "Home",
+      link: "/",
+    },
+    {
+      label: "Stock Transactions",
+      link: "/stocks",
+    },
+    {
+      label: "Transaction",
+      link: "/stocktransaction",
+    },
   ];
 
   return (
@@ -33,8 +43,8 @@ const NavBarWrapper = ({ children }: Props) => {
         isMenuOpen={isMenuOpen}
         onMenuOpenChange={setIsMenuOpen}
         classNames={{
-            wrapper: "w-full max-w-full",
-          }}
+          wrapper: "w-full max-w-full",
+        }}
       >
         <NavbarContent className="sm:hidden" justify="start">
           <NavbarMenuToggle
@@ -43,43 +53,40 @@ const NavBarWrapper = ({ children }: Props) => {
         </NavbarContent>
 
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
-          <NavbarItem>
-            <Link color="foreground" href="/">
+          <NavbarItem 
+          isActive={pathname === "/" ? true : false}
+          >
+            <Link color={pathname === "/" ? "primary" : "foreground"} href="/">
               Home
             </Link>
           </NavbarItem>
-          <NavbarItem isActive>
-            <Link href="/stocks" aria-current="page">
+          <NavbarItem 
+          isActive={pathname === "/stocks" ? true : false}
+          >
+            <Link color={pathname === "/stocks" ? "primary" : "foreground"} href="/stocks" aria-current="page">
               Stocks
             </Link>
           </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Transactions
+          <NavbarItem
+            isActive={pathname === "/stocktransaction" ? true : false}
+          >
+            <Link color={pathname === "/stocktransaction" ? "primary" : "foreground"} href="/stocktransaction">
+              Stock Transactions
             </Link>
           </NavbarItem>
         </NavbarContent>
-        <NavbarContent 
-        justify="end"
-        >
+        <NavbarContent justify="end">
+          <DarkModeSwitch />
           <UserDropdown />
         </NavbarContent>
         <NavbarMenu>
           {menuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                className="w-full"
-                color={
-                  index === 2
-                    ? "warning"
-                    : index === menuItems.length - 1
-                    ? "danger"
-                    : "foreground"
-                }
-                href="#"
-                size="lg"
-              >
-                {item}
+            <NavbarMenuItem
+              key={`${item}-${index}`}
+              isActive={pathname === item.link ? true : false}
+            >
+              <Link className="w-full" href={item.link} size="lg">
+                {item.label}
               </Link>
             </NavbarMenuItem>
           ))}

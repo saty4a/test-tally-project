@@ -52,3 +52,15 @@ model StockData {
   final_P7 Int?
   createdAt DateTime?  @default(now())
 }
+
+model StockTransactionData {
+  id String                   @id @default(auto()) @map("_id") @db.ObjectId
+  date String
+  openingAmount Float
+  cylinders Int
+  loadAmount Float
+  soldCylinders Int
+  soldAmount Float
+  total Float
+  createdAt DateTime?  @default(now())
+}

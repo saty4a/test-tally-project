@@ -1,22 +1,21 @@
 "use client"
-import { SignedIn, useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import LesureData from "@/components/Lesure/LesureData";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import SignInForm from "./signin/page";
 
 export default function Home() {
-  const router = useRouter();
-  const isBrowser = () => typeof window !== "undefined";
-
-  const { isSignedIn } = useUser();
-
-  if(!isSignedIn){
-    router.push("/signin");
-  }
 
   return (
+    <>
     <SignedIn>
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <main className="flex min-h-screen flex-col gap-2 my-3">
       <p className="text-center">Welcome to tally</p>
-    </main>
+      <LesureData />
+      </main>
     </SignedIn>
+    <SignedOut>
+      <SignInForm />
+    </SignedOut>
+    </>
   );
 }

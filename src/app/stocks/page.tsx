@@ -2,6 +2,7 @@
 import { Stocks } from "@/components/stocks";
 import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import React from "react";
+import SignInForm from "../signin/page";
 
 const accounts = () => {
 
@@ -11,7 +12,7 @@ const accounts = () => {
         <Stocks />
       </SignedIn>
       <SignedOut>
-        <p>Sign In first</p>
+        <SignInForm />
       </SignedOut>
       </>
   );

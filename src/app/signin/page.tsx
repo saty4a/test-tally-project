@@ -3,7 +3,7 @@
 import { SignIn } from "@clerk/nextjs";
 import React from "react";
 
-function page() {
+function SignInForm() {
     return(
         <div className="flex items-center justify-center min-h-screen">
             <SignIn />
@@ -11,4 +11,4 @@ function page() {
     )
 }
 
-export default page;
+export default SignInForm;
