@@ -127,7 +127,7 @@ const LesureData = () => {
               )}
             </TableHeader>
             <TableBody items={stockNames} emptyContent={"No rows to display."}>
-              {stockNames.length > 0 ? (
+              {stockNames && stockNames.length > 0 ? (
                 <TableRow>
                   {stockNames?.map((item, index) => (
                     <TableCell key={index}>{item}</TableCell>
@@ -159,13 +159,13 @@ const LesureData = () => {
           </TableHeader>
           <TableBody items={stockNames} emptyContent={"No rows to display."}>
             <TableRow>
-              <TableCell>{transactionData.date}</TableCell>
-              <TableCell>{transactionData.openingAmount}</TableCell>
-              <TableCell>{transactionData.cylinders}</TableCell>
-              <TableCell>{transactionData.loadAmount}</TableCell>
-              <TableCell>{transactionData.soldCylinders}</TableCell>
-              <TableCell>{transactionData.soldAmount}</TableCell>
-              <TableCell>{transactionData.total}</TableCell>
+              <TableCell>{transactionData?.date}</TableCell>
+              <TableCell>{transactionData?.openingAmount}</TableCell>
+              <TableCell>{transactionData?.cylinders}</TableCell>
+              <TableCell>{transactionData?.loadAmount}</TableCell>
+              <TableCell>{transactionData?.soldCylinders}</TableCell>
+              <TableCell>{transactionData?.soldAmount}</TableCell>
+              <TableCell>{transactionData?.total}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
