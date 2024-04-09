@@ -16,7 +16,7 @@ import Swal from "sweetalert2";
 import { DeleteIcon } from "@/icons/table/deleteIcon";
 import dayjs from "dayjs";
 import { deleteStockAmount, getStockAmounts } from "./data";
-import { getOpeningAmount } from "../openingAmountApiCalls/data";
+import { addOpeningAmount, getOpeningAmount } from "../openingAmountApiCalls/data";
 
 const StockTransaction = () => {
   const [previousTotal, setPreviousTotal] = useState<number>(0);
@@ -67,6 +67,9 @@ const StockTransaction = () => {
             timer: 1500,
           });
           fetchStockAmounts();
+          const totalAmount = (previousTotal - res?.data?.data?.soldAmount) + +res.data?.data?.loadAmount;
+          await addOpeningAmount(totalAmount);
+          setIsAdded(true);
         }
       } catch (error) {
         console.error(error);

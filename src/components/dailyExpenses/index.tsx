@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 import { DeleteIcon } from "@/icons/table/deleteIcon";
 import dayjs from "dayjs";
 import { AddExpenses } from "./addExpenses";
-import { getOpeningAmount } from "../openingAmountApiCalls/data";
+import { addOpeningAmount, getOpeningAmount } from "../openingAmountApiCalls/data";
 import { deleteExpenditureData, getExpenditureData } from "./data";
 
 interface SalaryExpenditureType {
@@ -75,6 +75,9 @@ const DailyExpenses = () => {
             timer: 1500,
           });
           fetchExpenditureData();
+          const totalAmount = res.data.data.expenditure.openingAmount - res.data.data.expenditure.total;
+          await addOpeningAmount(previousTotal + totalAmount);
+          setIsAdded(true);
         }
       } catch (error) {
         console.error(error);
@@ -130,8 +133,6 @@ const DailyExpenses = () => {
     );
     setIsAdded(false);
   }, [isAdded, setIsAdded]);
-
-  console.log(items);
 
   return (
     <div className="flex flex-col gap-3">

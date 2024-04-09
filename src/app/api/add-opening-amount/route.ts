@@ -14,7 +14,7 @@ export async function POST(req: NextRequest){
         }
 
         const checkOpeningAmount = await prisma.startingAmount.findMany();
-        console.log(checkOpeningAmount)
+        
         if(checkOpeningAmount?.length > 0){
             const updatedOpeningAmount = await prisma.startingAmount.update({
                 where: {

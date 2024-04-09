@@ -12,7 +12,7 @@ import {
 import Swal from "sweetalert2";
 import { DeleteIcon } from "@/icons/table/deleteIcon";
 import dayjs from "dayjs";
-import { getOpeningAmount } from "../openingAmountApiCalls/data";
+import { addOpeningAmount, getOpeningAmount } from "../openingAmountApiCalls/data";
 import { getSalaryData, deleteSalaryData } from "./data";
 import { AddSalary } from "./addSalary";
 
@@ -75,6 +75,9 @@ const SalaryExpenses = () => {
             timer: 1500,
           });
           fetchSalaryExpenditureData();
+          const totalAmount = res.data.data.salary.openingAmount - res.data.data.salary.total;
+          await addOpeningAmount(previousTotal + totalAmount);
+          setIsAdded(true);
         }
       } catch (error) {
         console.error(error);
@@ -130,8 +133,6 @@ const SalaryExpenses = () => {
     );
     setIsAdded(false);
   }, [isAdded, setIsAdded]);
-
-  console.log(items);
 
   return (
     <div className="flex flex-col gap-3">

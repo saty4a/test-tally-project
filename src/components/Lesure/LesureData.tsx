@@ -129,8 +129,6 @@ const LesureData = () => {
     setIsAdded(false);
   }, [setIsAdded, isAdded]);
 
-  console.log(previousTotal);
-
   return (
     <div className="flex flex-col gap-2 justify-between mx-3">
       <div>

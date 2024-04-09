@@ -2,13 +2,14 @@
 import LesureData from "@/components/Lesure/LesureData";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import SignInForm from "./signin/page";
+import { Footer } from "@/components/footer/footer";
 
 export default function Home() {
 
   return (
     <>
     <SignedIn>
-      <main className="flex min-h-screen flex-col gap-2 my-3">
+      <main className="flex flex-col gap-2 my-3">
       <p className="text-center">Welcome to tally</p>
       <LesureData />
       </main>
@@ -16,6 +17,7 @@ export default function Home() {
     <SignedOut>
       <SignInForm />
     </SignedOut>
+    {/* <Footer /> */}
     </>
   );
 }
