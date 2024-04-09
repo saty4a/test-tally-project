@@ -111,7 +111,7 @@ const NavBarWrapper = ({ children }: Props) => {
               key={`${item}-${index}`}
               isActive={pathname === item.link ? true : false}
             >
-              <Link className="w-full" href={item.link} size="lg">
+              <Link className="w-full" color={pathname === item.link ? "primary" : "foreground"} href={item.link} size="lg">
                 {item.label}
               </Link>
             </NavbarMenuItem>
