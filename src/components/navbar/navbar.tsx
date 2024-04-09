@@ -39,10 +39,6 @@ const NavBarWrapper = ({ children }: Props) => {
       link: "/dailyexpenses"
     },
     {
-      label: "Daily Expenses",
-      link: "/dailyexpenses"
-    },
-    {
       label: "Salary Expenses",
       link: "/salaryexpenses"
     }
