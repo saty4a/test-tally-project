@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { addOpeningAmount } from "../openingAmountApiCalls/data";
 
 interface stockData {
   amountData: amountDataType;
@@ -38,6 +39,7 @@ export const AddAmount = ({previousTotal, setIsAdded} : {previousTotal: number; 
     soldAmount: 0,
     total: 0,
   });
+  const [dailyExpenditure, setDailyExpenditure] = useState({ })
   let totalAmount = 0;
 
   const updateStocks = (key: string, value: number) => {
@@ -61,6 +63,10 @@ export const AddAmount = ({previousTotal, setIsAdded} : {previousTotal: number; 
     setAmountData({ ...amountData, [key]: value, total: totalAmount });
   };
 
+  const updateDailyExpenditure = (key: string, value: number) => {
+
+  }
+
 
   const addAmountData = async () => {
     if (
@@ -80,6 +86,7 @@ export const AddAmount = ({previousTotal, setIsAdded} : {previousTotal: number; 
       return;
     }
     try {
+      await addOpeningAmount(amountData.total);
       const res = await axios.post('/api/stocktransaction', amountData);
       if (res.data.error) {
         Swal.fire({
@@ -165,6 +172,7 @@ export const AddAmount = ({previousTotal, setIsAdded} : {previousTotal: number; 
 };
 
 const StocksOptions = ({amountData, updateStocks }: stockData) => {
+
   return (
     <div className="grid gap-4">
       <Input
@@ -240,65 +248,3 @@ const StocksOptions = ({amountData, updateStocks }: stockData) => {
     </div>
   );
 };
-
-// const StocksOptions = ({
-//     stockNames,
-//     updateStocks,
-//   }: stockData) => {
-
-//     const [opening, setOpeningData] = useState("");
-
-//     const [closing, setClosingData] = useState("");
-
-//     return (
-//       <div className="grid gap-4">
-//         <Input
-//           type="date"
-//           onChange={(e) => updateStocks("date", e.target.value)}
-//         />
-//         <div className="flex items-center gap-3">
-//           <Select
-//             label="opening stocks"
-//             onChange={(e) => {
-//               setOpeningData(e.target.value);
-//             }}
-//           >
-//             {stockNames &&
-//               stockNames.map((data, index) => (
-//                 <SelectItem key={`opening_${index}`} value={data}>
-//                   {data}
-//                 </SelectItem>
-//               ))}
-//           </Select>
-//           <Input
-//             type="number"
-//             className="h-[3rem]"
-//             onChange={(e) => {
-//               updateStocks(opening, e.target.value);
-//             }}
-//             placeholder="opening stocks"
-//           />
-//         </div>
-//         <div className="flex items-center gap-3">
-//           <Select
-//             label="closing stocks"
-//             onChange={(e) => {
-//               setClosingData(e.target.value);
-//             }}
-//           >
-//             {stockNames &&
-//               stockNames.map((data, index) => (
-//                 <SelectItem key={`closing_${index}`}>{data}</SelectItem>
-//               ))}
-//           </Select>
-//           <Input
-//             type="number"
-//             placeholder="closing stocks"
-//             onChange={(e) => {
-//               updateStocks(closing, e.target.value);
-//             }}
-//           />
-//         </div>
-//       </div>
-//     );
-//   };

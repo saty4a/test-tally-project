@@ -34,6 +34,18 @@ const NavBarWrapper = ({ children }: Props) => {
       label: "Transaction",
       link: "/stocktransaction",
     },
+    {
+      label: "Daily Expenses",
+      link: "/dailyexpenses"
+    },
+    {
+      label: "Daily Expenses",
+      link: "/dailyexpenses"
+    },
+    {
+      label: "Salary Expenses",
+      link: "/salaryexpenses"
+    }
   ];
 
   return (
@@ -72,6 +84,20 @@ const NavBarWrapper = ({ children }: Props) => {
           >
             <Link color={pathname === "/stocktransaction" ? "primary" : "foreground"} href="/stocktransaction">
               Stock Transactions
+            </Link>
+          </NavbarItem>
+          <NavbarItem
+            isActive={pathname === "/dailyexpenses" ? true : false}
+          >
+            <Link color={pathname === "/dailyexpenses" ? "primary" : "foreground"} href="/dailyexpenses">
+              Daily Expenses
+            </Link>
+          </NavbarItem>
+          <NavbarItem
+            isActive={pathname === "/salaryexpenses" ? true : false}
+          >
+            <Link color={pathname === "/salaryexpenses" ? "primary" : "foreground"} href="/salaryexpenses">
+              Salary Expenses
             </Link>
           </NavbarItem>
         </NavbarContent>

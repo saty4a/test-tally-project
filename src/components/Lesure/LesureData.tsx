@@ -12,6 +12,16 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { getStocknames } from "../stocks/data";
 import { AddAmount } from "../stocktransaction/addAmount";
+import { getOpeningAmount } from "../openingAmountApiCalls/data";
+import { AddOpeningAmount } from "../openingamount/addOpeningAmount";
+
+interface openingDataType {
+  id: string;
+  openingAmount: number;
+  createdAt: Date;
+  gst1: number;
+  gst2: number;
+}
 
 const LesureData = () => {
   const [isAdded, setIsAdded] = useState(false);
@@ -25,9 +35,14 @@ const LesureData = () => {
     soldAmount: 0,
     total: 0,
   });
-  const [stockData, setStockData] = useState({
-
-  })
+  const [previousTotal, setPreviousTotal] = useState<openingDataType>({
+    id: "",
+    openingAmount: 0,
+    createdAt: new Date(),
+    gst1: 0,
+    gst2: 0,
+  });
+  const [stockData, setStockData] = useState({});
 
   let ModifiedStockNames: any[] = [];
   const StockCodes = [
@@ -108,44 +123,74 @@ const LesureData = () => {
   useEffect(() => {
     fetchStockNames();
     fetchTransactionData();
+    getOpeningAmount().then((res) => {
+      setPreviousTotal(res?.data);
+    });
     setIsAdded(false);
   }, [setIsAdded, isAdded]);
 
+  console.log(previousTotal);
+
   return (
-    <div className="flex flex-row xl:flex-col gap-2 justify-between mx-3">
-        <div>
-          <div className="flex gap-3 items-center my-3">
-          <p className="">Stock code</p>
-          <AddStocksCode setIsAdded={setIsAdded} />
-          </div>
-          <Table aria-label="table for stock codes">
-            <TableHeader columns={StockCodes}>
-              {(column) => (
-                <TableColumn key={column.key} className="">
-                  {column.key}
-                </TableColumn>
-              )}
-            </TableHeader>
-            <TableBody items={stockNames} emptyContent={"No rows to display."}>
-              {stockNames && stockNames.length > 0 ? (
-                <TableRow>
-                  {stockNames?.map((item, index) => (
-                    <TableCell key={index}>{item}</TableCell>
-                  ))}
-                </TableRow>
-              ) : (
-                []
-              )}
-            </TableBody>
-          </Table>
+    <div className="flex flex-col gap-2 justify-between mx-3">
+      <div>
+        <div className="flex gap-3 justify-between lg:justify-start items-center my-3">
+          <p className="">Opening Data</p>
+          <AddOpeningAmount
+            previousTotal={previousTotal}
+            setIsAdded={setIsAdded}
+          />
         </div>
         <div>
-        <div className="flex gap-3 items-center my-3">
-        <p className="">Latest Transaction code</p>
-        <AddAmount
-          previousTotal={transactionData?.total}
-          setIsAdded={setIsAdded}
-        />
+        <Table isCompact={true} className="w-[20rem]" aria-label="table for stock transaction">
+          <TableHeader>
+            <TableColumn>openingAmount</TableColumn>
+            <TableColumn>GST 1</TableColumn>
+            <TableColumn>GST 2</TableColumn>
+          </TableHeader>
+          <TableBody emptyContent={"No rows to display."}>
+            <TableRow>
+              <TableCell>{previousTotal?.openingAmount}</TableCell>
+              <TableCell>{previousTotal?.gst1}</TableCell>
+              <TableCell>{previousTotal?.gst2}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+        </div>
+      </div>
+      <div>
+        <div className="flex gap-3 justify-between lg:justify-start items-center my-3">
+          <p className="">Stock code</p>
+          <AddStocksCode setIsAdded={setIsAdded} />
+        </div>
+        <Table aria-label="table for stock codes">
+          <TableHeader columns={StockCodes}>
+            {(column) => (
+              <TableColumn key={column.key} className="">
+                {column.key}
+              </TableColumn>
+            )}
+          </TableHeader>
+          <TableBody items={stockNames} emptyContent={"No rows to display."}>
+            {stockNames && stockNames.length > 0 ? (
+              <TableRow>
+                {stockNames?.map((item, index) => (
+                  <TableCell key={index}>{item}</TableCell>
+                ))}
+              </TableRow>
+            ) : (
+              []
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div>
+        <div className="flex gap-3 justify-between lg:justify-start items-center my-3">
+          <p className="">Latest Stock Transaction code</p>
+          <AddAmount
+            previousTotal={previousTotal.openingAmount}
+            setIsAdded={setIsAdded}
+          />
         </div>
         <Table aria-label="table for stock transaction">
           <TableHeader columns={StockCodes}>
@@ -169,8 +214,8 @@ const LesureData = () => {
             </TableRow>
           </TableBody>
         </Table>
-        </div>
       </div>
+    </div>
   );
 };
 

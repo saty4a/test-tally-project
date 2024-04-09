@@ -1,34 +1,42 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { AddAmount } from "./addAmount";
 import {
   Input,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-  Tooltip,
   Pagination,
+  Accordion,
+  AccordionItem,
+  Card,
+  CardBody,
+  CardFooter,
 } from "@nextui-org/react";
 import Swal from "sweetalert2";
 import { DeleteIcon } from "@/icons/table/deleteIcon";
 import dayjs from "dayjs";
-import { deleteStockAmount, getStockAmounts } from "./data";
 import { getOpeningAmount } from "../openingAmountApiCalls/data";
+import { getSalaryData, deleteSalaryData } from "./data";
+import { AddSalary } from "./addSalary";
 
-const StockTransaction = () => {
+interface SalaryExpenditureType {
+  createdAt: string;
+  salary: {
+    [key: string]: string;
+  };
+  id: string;
+}
+
+const SalaryExpenses = () => {
   const [previousTotal, setPreviousTotal] = useState<number>(0);
   const [isAdded, setIsAdded] = useState(false);
-  const [stockAmountData, setStockAmountData] = useState<any[]>([]);
+  const [allSalaryExpenditureData, setAllSalaryExpenditureData] = useState<
+    SalaryExpenditureType[]
+  >([]);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterValue, setFilterValue] = useState("");
 
-  const fetchStockAmounts = async () => {
+  const fetchSalaryExpenditureData = async () => {
     try {
-      await getStockAmounts().then((res: any) => {
+      await getSalaryData().then((res: any) => {
         if (res?.data?.error) {
           Swal.fire({
             icon: "error",
@@ -39,7 +47,7 @@ const StockTransaction = () => {
           });
         }
         if (!res?.data?.error) {
-          setStockAmountData(res?.data?.data);
+          setAllSalaryExpenditureData(res?.data);
         }
       });
     } catch (error) {}
@@ -57,7 +65,7 @@ const StockTransaction = () => {
     });
     if (result.isConfirmed) {
       try {
-        const res = await deleteStockAmount(id);
+        const res = await deleteSalaryData(id);
         if (res?.status === 200) {
           Swal.fire({
             position: "top-end",
@@ -66,7 +74,7 @@ const StockTransaction = () => {
             showConfirmButton: false,
             timer: 1500,
           });
-          fetchStockAmounts();
+          fetchSalaryExpenditureData();
         }
       } catch (error) {
         console.error(error);
@@ -80,24 +88,26 @@ const StockTransaction = () => {
   };
 
   const filteredItems = useMemo(() => {
-    let filteredData = [...stockAmountData];
-    filteredData = filteredData.filter((data) => data.date.includes(filterValue));
+    let filteredData = [...allSalaryExpenditureData];
+    filteredData = filteredData.filter((data) =>
+      data?.salary?.date?.includes(filterValue)
+    );
     return filteredData;
-  },[stockAmountData, filterValue, setFilterValue])
+  }, [allSalaryExpenditureData, filterValue, setFilterValue]);
 
   let pages = Math.ceil(filteredItems.length / rowsPerPage);
 
   const onRowsPerPageChange = useCallback((value: string) => {
     setRowsPerPage(Number(value));
     setPage(1);
-  },[])
+  }, []);
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
     return filteredItems.slice(start, end);
-  },[page, stockAmountData, setRowsPerPage, rowsPerPage, filteredItems])
+  }, [page, allSalaryExpenditureData, setRowsPerPage, rowsPerPage, filteredItems]);
 
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
@@ -114,10 +124,14 @@ const StockTransaction = () => {
   }, []);
 
   useEffect(() => {
-    fetchStockAmounts();
-    getOpeningAmount().then((res) => {setPreviousTotal(res?.data?.openingAmount)});
+    fetchSalaryExpenditureData();
+    getOpeningAmount().then((res) =>
+      setPreviousTotal(res?.data?.openingAmount)
+    );
     setIsAdded(false);
   }, [isAdded, setIsAdded]);
+
+  console.log(items);
 
   return (
     <div className="flex flex-col gap-3">
@@ -128,16 +142,16 @@ const StockTransaction = () => {
           type="text"
           placeholder="search by date..."
           className="w-1/5"
-            value={filterValue}
-            onClear={() => onClear()}
-            onValueChange={onSearchChange}
+          value={filterValue}
+          onClear={() => onClear()}
+          onValueChange={onSearchChange}
         />
         <div className="flex gap-3">
-          <AddAmount previousTotal={previousTotal} setIsAdded={setIsAdded} />
+          <AddSalary previousTotal={previousTotal} setIsAdded={setIsAdded} />
         </div>
-      </div >
+      </div>
       <div className="flex justify-between mx-4">
-        <p>Total documents: {stockAmountData.length}</p>
+        <p>Total documents: {allSalaryExpenditureData.length}</p>
         <label className="flex items-center text-default-400 text-small">
           Rows per page:
           <select
@@ -150,73 +164,46 @@ const StockTransaction = () => {
             <option value="40">40</option>
           </select>
         </label>
-      </div> 
+      </div>
       <div className="mx-4">
-      <Table
-        aria-label="Example static collection table w-full overflow-auto"
-        bottomContent={
-          <div className="flex w-full justify-center">
-            <Pagination
-              isCompact
-              showControls
-              showShadow
-              color="secondary"
-              page={page}
-              total={pages}
-              onChange={(page) => setPage(page)}
-            />
+        <div className="flex flex-wrap justify-center gap-4">
+        {items &&
+          items.map((data, index) => (
+            <Card isFooterBlurred className="w-[20rem] md:w-fit overflow-auto" key={data.id}>
+              <CardBody className="overflow-auto">
+                {Object.keys(data.salary).map((keys, index) => (
+                  <div className="flex gap-3" key={`salary=${index}`}>
+                    <p>{keys}: </p>
+                    {keys === "date" ? (
+                      dayjs(data.salary[keys]).format("DD/MM/YYYY")
+                    ) : (
+                      <p>{data.salary[keys]}</p>
+                    )}
+                  </div>
+                ))}
+              </CardBody>
+              <CardFooter className="justify-center mb-3 before:bg-white/10 border-white/20 border-1 overflow-auto py-1 before:rounded-xl rounded-large w-[calc(100%_-_8px)] shadow-small ml-1">
+                <button className="" onClick={() => { deleteData(data.id) }}>
+                  <DeleteIcon size={20} fill="#FF0080" />
+                </button>
+              </CardFooter>
+            </Card>
+          ))}
           </div>
-        }
-      >
-        <TableHeader>
-          <TableColumn>date</TableColumn>
-          <TableColumn>openingAmount</TableColumn>
-          <TableColumn>cylinders</TableColumn>
-          <TableColumn>loadAmount</TableColumn>
-          <TableColumn>soldCylinders</TableColumn>
-          <TableColumn>soldAmount</TableColumn>
-          <TableColumn>total</TableColumn>
-          <TableColumn>actions</TableColumn>
-        </TableHeader>
-        <TableBody items={items} emptyContent={"No data to display"}>
-          {(item) => (
-            <TableRow key={item.id}>
-                <TableCell>
-                {dayjs(item.date).format("DD/MM/YYYY")}
-                </TableCell>
-                <TableCell>
-                {item.openingAmount}
-                </TableCell>
-                <TableCell>
-                {item.cylinders}
-                </TableCell>
-                <TableCell>
-                {item.loadAmount}
-                </TableCell>
-                <TableCell>
-                {item.soldCylinders}
-                </TableCell>
-                <TableCell>
-                {item.soldAmount}
-                </TableCell>
-                <TableCell>
-                {item.total}
-                </TableCell>
-                <TableCell className="">
-                    <Tooltip content="Delete user" color="danger">
-                      <button className="" onClick={() => { deleteData(item.id) }}>
-                        <DeleteIcon size={20} fill="#FF0080" />
-                      </button>
-                    </Tooltip>
-                  </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+        <div className="flex w-full justify-center my-5">
+          <Pagination
+            isCompact
+            showControls
+            showShadow
+            color="secondary"
+            page={page}
+            total={pages}
+            onChange={(page) => setPage(page)}
+          />
+        </div>
       </div>
     </div>
   );
 };
 
-export default StockTransaction;
-
+export default SalaryExpenses;

@@ -64,3 +64,23 @@ model StockTransactionData {
   total Float
   createdAt DateTime?  @default(now())
 }
+
+model StartingAmount {
+  id String                   @id @default(auto()) @map("_id") @db.ObjectId
+  openingAmount Float
+  gst1 Float
+  gst2 Float
+  createdAt DateTime? @default(now())
+}
+
+model DailyExpenses {
+  id String                   @id @default(auto()) @map("_id") @db.ObjectId
+  expenditure Json
+  createdAt DateTime? @default(now())
+}
+
+model SalaryExpenses {
+  id String                   @id @default(auto()) @map("_id") @db.ObjectId
+  salary Json
+  createdAt DateTime? @default(now())
+}
