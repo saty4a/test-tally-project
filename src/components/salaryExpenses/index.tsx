@@ -136,7 +136,7 @@ const SalaryExpenses = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="mx-4 mt-4">Add Stocks Transaction</h3>
+      <h3 className="mx-4 mt-4">Add Salary Expenses</h3>
       <div className="flex justify-between mt-5 mx-3">
         <Input
           isClearable

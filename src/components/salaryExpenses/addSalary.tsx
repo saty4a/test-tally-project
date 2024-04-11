@@ -75,9 +75,8 @@ export const AddSalary = ({previousTotal, setIsAdded} : {previousTotal: number; 
             confirmButtonText: "Yes, add it!",
           });
           if (result.isConfirmed) {
-           
+            await sendExpenditureData(finalAmount, obj)
           }
-          await sendExpenditureData(finalAmount, obj)
   }
 
   const sendExpenditureData = async (finalAmount: number, obj: any) => {

@@ -75,15 +75,14 @@ import { addOpeningAmount } from "../openingAmountApiCalls/data";
               confirmButtonText: "Yes, add it!",
             });
             if (result.isConfirmed) {
-             
+              await sendExpenditureData(finalAmount, obj)
             }
-            await sendExpenditureData(finalAmount, obj)
     }
 
     const sendExpenditureData = async (finalAmount: number, obj: any) => {
       try {
         await addOpeningAmount(finalAmount)
-        const res = await axios.post('/api/salaryexpenses', { salary: obj  });
+        const res = await axios.post('/api/dailyexpenses', { expenditure: obj  });
         if (res.data.error) {
           Swal.fire({
             icon: "error",
