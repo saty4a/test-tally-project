@@ -179,7 +179,6 @@ export const AddOpeningAmount = ({
   useEffect(() => {
     setOpeningData({
       ...openingData,
-      cash: previousTotal.cash ? previousTotal.cash : 0,
       openingAmount: previousTotal.closingAmount
         ? previousTotal.closingAmount
         : 0,
