@@ -139,6 +139,7 @@ export const AddSalary = ({
         Add Salary Expenditure data
       </Button>
       <Modal
+        backdrop="blur"
         isOpen={isOpen}
         onClose={onClose}
         placement="bottom-center"

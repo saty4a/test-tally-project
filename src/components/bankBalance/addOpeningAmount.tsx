@@ -193,6 +193,7 @@ export const AddOpeningAmount = ({
         Add Opening data
       </Button>
       <Modal
+        backdrop="blur"
         isOpen={isOpen}
         onClose={onClose}
         placement="bottom-center"

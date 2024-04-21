@@ -207,7 +207,7 @@ const StockTransaction = () => {
                 <TableCell>{item.soldAmount}</TableCell>
                 <TableCell>{item.total}</TableCell>
                 <TableCell className="">
-                  <Tooltip content="Delete user" color="danger">
+                  <Tooltip content="Delete data" color="danger">
                     <button
                       className=""
                       onClick={() => {

@@ -299,7 +299,7 @@ export const Stocks = () => {
                   <TableCell className="text-center">{item.final_P6}</TableCell>
                   <TableCell className="text-center">{item.final_P7}</TableCell>
                   <TableCell className="">
-                    <Tooltip content="Delete user" color="danger">
+                    <Tooltip content="Delete data" color="danger">
                       <button className="" onClick={() => deleteData(item.id)}>
                         <DeleteIcon size={20} fill="#FF0080" />
                       </button>

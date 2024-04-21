@@ -6,6 +6,7 @@ import {
   Card,
   CardBody,
   CardFooter,
+  Tooltip,
 } from "@nextui-org/react";
 import Swal from "sweetalert2";
 import { DeleteIcon } from "@/icons/table/deleteIcon";
@@ -16,7 +17,6 @@ import {
   getOpeningAmount,
 } from "../openingAmountApiCalls/data";
 import { deleteExpenditureData, getExpenditureData } from "./data";
-import { openingDataType } from "../Lesure/LesureData";
 import { useGlobalAmountContext } from "../layout/openingAmountContext";
 
 interface SalaryExpenditureType {
@@ -179,15 +179,15 @@ const DailyExpenses = () => {
         </label>
       </div>
       <div className="mx-4">
-          <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-4">
           {items &&
             items.map((data, index) => (
               <Card
                 isFooterBlurred
                 className="w-fit overflow-auto"
                 key={data.id}
-                >
-                  <CardBody className="overflow-auto">
+              >
+                <CardBody className="overflow-auto">
                   {Object.keys(data.expenditure).map((keys, index) => (
                     <div className="flex gap-3" key={`expenditure-${index}`}>
                       <p>{keys}: </p>
@@ -198,17 +198,22 @@ const DailyExpenses = () => {
                       )}
                     </div>
                   ))}
-                  </CardBody>
-                  <CardFooter className="justify-center mb-3 before:bg-white/10 border-white/20 border-1 overflow-auto py-1 before:rounded-xl rounded-large w-[calc(100%_-_8px)] shadow-small ml-1">
-                  <button className="" onClick={() => {
-                    deleteData(data.id);
-                  }}>
-                    <DeleteIcon size={20} fill="#FF0080" />
-                  </button>
-                  </CardFooter>
-                </Card>
+                </CardBody>
+                <CardFooter className="justify-center mb-3 before:bg-white/10 border-white/20 border-1 overflow-auto py-1 before:rounded-xl rounded-large w-[calc(100%_-_8px)] shadow-small ml-1">
+                  <Tooltip content="Delete data" color="danger">
+                    <button
+                      className=""
+                      onClick={() => {
+                        deleteData(data.id);
+                      }}
+                    >
+                      <DeleteIcon size={20} fill="#FF0080" />
+                    </button>
+                  </Tooltip>
+                </CardFooter>
+              </Card>
             ))}
-          </div>
+        </div>
         <div className="flex w-full justify-center my-5">
           <Pagination
             isCompact

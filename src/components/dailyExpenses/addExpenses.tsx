@@ -139,6 +139,7 @@ export const AddExpenses = ({
         Add Expenditure data
       </Button>
       <Modal
+        backdrop="blur"
         isOpen={isOpen}
         onClose={onClose}
         placement="bottom-center"

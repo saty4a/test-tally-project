@@ -104,6 +104,7 @@ export const AddStocksCode = ({ setIsAdded }: { setIsAdded: Function }) => {
         Add Stocks code
       </Button>
       <Modal
+        backdrop="blur"
         isOpen={isOpen}
         onClose={onClose}
         placement="bottom-center"

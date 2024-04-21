@@ -8,6 +8,7 @@ import {
   Card,
   CardBody,
   CardFooter,
+  Tooltip,
 } from "@nextui-org/react";
 import Swal from "sweetalert2";
 import { DeleteIcon } from "@/icons/table/deleteIcon";
@@ -208,14 +209,16 @@ const SalaryExpenses = () => {
                   ))}
                 </CardBody>
                 <CardFooter className="justify-center mb-3 before:bg-white/10 border-white/20 border-1 overflow-auto py-1 before:rounded-xl rounded-large w-[calc(100%_-_8px)] shadow-small ml-1">
-                  <button
-                    className=""
-                    onClick={() => {
-                      deleteData(data.id);
-                    }}
-                  >
-                    <DeleteIcon size={20} fill="#FF0080" />
-                  </button>
+                  <Tooltip content="Delete data" color="danger">
+                    <button
+                      className=""
+                      onClick={() => {
+                        deleteData(data.id);
+                      }}
+                    >
+                      <DeleteIcon size={20} fill="#FF0080" />
+                    </button>
+                  </Tooltip>
                 </CardFooter>
               </Card>
             ))}

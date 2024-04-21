@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 import { getStocknames } from "../stocks/data";
 import { AddAmount } from "../stocktransaction/addAmount";
 import { getOpeningAmount } from "../openingAmountApiCalls/data";
-import { AddOpeningAmount } from "../openingamount/addOpeningAmount";
+import { AddOpeningAmount } from "../bankBalance/addOpeningAmount";
 import { useGlobalAmountContext } from "../layout/openingAmountContext";
 import dayjs from "dayjs";
 

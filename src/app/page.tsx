@@ -16,7 +16,6 @@ export default function Home() {
       <SignedOut>
         <SignInForm />
       </SignedOut>
-      {/* <Footer /> */}
     </>
   );
 }

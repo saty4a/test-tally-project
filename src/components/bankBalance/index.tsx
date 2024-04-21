@@ -20,7 +20,7 @@ import {
   openingDataType,
   useGlobalAmountContext,
 } from "../layout/openingAmountContext";
-import { AddOpeningAmount } from "../openingamount/addOpeningAmount";
+import { AddOpeningAmount } from "./addOpeningAmount";
 
 const BankBalance = () => {
   const [isAdded, setIsAdded] = useState(false);

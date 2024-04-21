@@ -134,6 +134,7 @@ export const AddStocks = ({
         Add Stock
       </Button>
       <Modal
+        backdrop="blur"
         isOpen={isOpen}
         onClose={onClose}
         placement="bottom-center"

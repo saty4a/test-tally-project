@@ -145,6 +145,7 @@ export const AddAmount = ({
         Add Transaction data
       </Button>
       <Modal
+        backdrop="blur"
         isOpen={isOpen}
         onClose={onClose}
         placement="bottom-center"
