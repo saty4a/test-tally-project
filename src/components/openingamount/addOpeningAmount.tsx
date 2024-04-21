@@ -45,8 +45,10 @@ export const AddOpeningAmount = ({
     gst1: 0,
     gst2: 0,
   });
+  const countRef= useRef(0);
 
   const updateStocks = (key: string, value: number) => {
+    countRef.current = 1;
     if (isNaN(value)) {
       setOpeningData({ ...openingData, [key]: 0 });
       return;
@@ -160,13 +162,18 @@ export const AddOpeningAmount = ({
   // }, [openingData, setOpeningData]);
 
   const total = useMemo(() => {
-    return (
-      openingData.cash +
-      openingData.cbfs +
-      openingData.currentAccount +
-      openingData.openingAmount +
-      openingData.others
-    );
+    if(countRef.current > 0){
+      return (
+        openingData.cash +
+        openingData.cbfs +
+        openingData.currentAccount +
+        openingData.openingAmount +
+        openingData.others
+      );
+    }
+    else{
+      return 0;
+    }
   }, [openingData, setOpeningData]);
 
   useEffect(() => {
