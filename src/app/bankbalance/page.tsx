@@ -1,14 +1,14 @@
 "use client";
-import { Stocks } from "@/components/stocks";
-import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import React from "react";
 import SignInForm from "../signin/page";
+import BankBalance from "@/components/bankBalance";
 
 const accounts = () => {
   return (
     <>
       <SignedIn>
-        <Stocks />
+        <BankBalance />
       </SignedIn>
       <SignedOut>
         <SignInForm />

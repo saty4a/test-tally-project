@@ -25,7 +25,15 @@ interface amountDataType {
   total: number;
 }
 
-export const AddSalary = ({previousTotal, setIsAdded} : {previousTotal: number; setIsAdded: Function;}) => {
+export const AddSalary = ({
+  previousTotal,
+  previousId,
+  setIsAdded,
+}: {
+  previousTotal: number;
+  previousId: string;
+  setIsAdded: Function;
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [salaryAmountData, setSalaryAmountData] = useState({
     date: "",
@@ -41,10 +49,7 @@ export const AddSalary = ({previousTotal, setIsAdded} : {previousTotal: number; 
   };
 
   const addExpenditureData = async () => {
-    if (
-      salaryAmountData.date === "" ||
-      salaryAmountData.openingAmount === 0
-    ) {
+    if (salaryAmountData.date === "" || salaryAmountData.openingAmount === 0) {
       Swal.fire({
         icon: "error",
         title: "oops...",
@@ -55,34 +60,37 @@ export const AddSalary = ({previousTotal, setIsAdded} : {previousTotal: number; 
       return;
     }
 
-    let totalAmount = 0
-    const values = Object.values(salaryAmountData)
+    let totalAmount = 0;
+    const values = Object.values(salaryAmountData);
     for (let index = 1; index < values.length; index++) {
-      if(salaryAmountData.openingAmount !== values[index] && salaryAmountData.total !== values[index] ){
+      if (
+        salaryAmountData.openingAmount !== values[index] &&
+        salaryAmountData.total !== values[index]
+      ) {
         totalAmount = totalAmount + +values[index];
       }
     }
     const finalAmount = salaryAmountData.openingAmount - totalAmount;
-    setSalaryAmountData({...salaryAmountData, total: finalAmount})
-    const obj = { ...salaryAmountData, total: finalAmount}
+    setSalaryAmountData({ ...salaryAmountData, total: finalAmount });
+    const obj = { ...salaryAmountData, total: finalAmount };
     const result = await Swal.fire({
-            title: "Are you sure?",
-            text: `You won't be able to revert this! total- ${finalAmount}`,
-            icon: "info",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, add it!",
-          });
-          if (result.isConfirmed) {
-            await sendExpenditureData(finalAmount, obj)
-          }
-  }
+      title: "Are you sure?",
+      text: `You won't be able to revert this! total- ${finalAmount}`,
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, add it!",
+    });
+    if (result.isConfirmed) {
+      await sendExpenditureData(finalAmount, obj);
+    }
+  };
 
   const sendExpenditureData = async (finalAmount: number, obj: any) => {
     try {
-      await addOpeningAmount(finalAmount)
-      const res = await axios.post('/api/salaryexpenses', { salary: obj  });
+      await addOpeningAmount(previousId, finalAmount);
+      const res = await axios.post("/api/salaryexpenses", { salary: obj });
       if (res.data.error) {
         Swal.fire({
           icon: "error",
@@ -108,7 +116,7 @@ export const AddSalary = ({previousTotal, setIsAdded} : {previousTotal: number; 
           total: 0,
         });
       }
-      console.log(res)
+      console.log(res);
     } catch (error) {
       console.log(error);
       Swal.fire({
@@ -119,23 +127,11 @@ export const AddSalary = ({previousTotal, setIsAdded} : {previousTotal: number; 
         timer: 1000,
       });
     }
-  }
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     if(!isNaN(price.current)){
-  //         setAmountData({...amountData, total: amountData.total + price.current})
-  //     }
-  //     else{
-  //       price.current = 0
-  //     }
-  //   }, 1000);
-  //   return () => clearTimeout(timer);
-  // },[price.current])
+  };
 
   useEffect(() => {
     setSalaryAmountData({ ...salaryAmountData, openingAmount: previousTotal });
-  },[previousTotal])
+  }, [previousTotal]);
 
   return (
     <>
@@ -149,10 +145,13 @@ export const AddSalary = ({previousTotal, setIsAdded} : {previousTotal: number; 
         style={{ width: "600px" }}
       >
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">Add Stock</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1">Add Salary Expenditure data</ModalHeader>
           <ModalBody>
-            <StocksOptions salaryAmountData={salaryAmountData} updateSalaryExpenditure={updateSalaryExpenditure} type={type} />
-            <p>Total Expenditure: {salaryAmountData.total}</p>
+            <StocksOptions
+              salaryAmountData={salaryAmountData}
+              updateSalaryExpenditure={updateSalaryExpenditure}
+              type={type}
+            />
           </ModalBody>
           <ModalFooter>
             <Button variant="flat" color="danger" onClick={onClose}>
@@ -163,7 +162,7 @@ export const AddSalary = ({previousTotal, setIsAdded} : {previousTotal: number; 
                 addExpenditureData();
               }}
             >
-              Add Stock
+              Add Data
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -172,15 +171,20 @@ export const AddSalary = ({previousTotal, setIsAdded} : {previousTotal: number; 
   );
 };
 
-const StocksOptions = ({salaryAmountData, updateSalaryExpenditure, type }: stockData) => {
-
+const StocksOptions = ({
+  salaryAmountData,
+  updateSalaryExpenditure,
+  type,
+}: stockData) => {
   return (
     <div className="grid gap-4">
       <Input
         type="date"
         label="date"
         variant="bordered"
-        onChange={(e) => { type.current = "date", updateSalaryExpenditure(e.target.value)}}
+        onChange={(e) => {
+          (type.current = "date"), updateSalaryExpenditure(e.target.value);
+        }}
       />
       <Input
         isClearable
@@ -190,7 +194,10 @@ const StocksOptions = ({salaryAmountData, updateSalaryExpenditure, type }: stock
         variant="bordered"
         value={`${salaryAmountData.openingAmount}`}
         min={0}
-        onChange={(e) => { type.current = "openingAmount", updateSalaryExpenditure(parseInt(e.target.value))}}
+        onChange={(e) => {
+          (type.current = "openingAmount"),
+            updateSalaryExpenditure(parseInt(e.target.value));
+        }}
       />
       <div className="flex items-center gap-3">
         <Input

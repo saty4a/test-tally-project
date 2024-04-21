@@ -8,13 +8,13 @@ const Sidebar = () => {
   const sidebarItems = [
     {
       title: "stocks",
-      icon: <Inventory2Icon sx={{ color: '#71717A' }} />,
+      icon: <Inventory2Icon sx={{ color: "#71717A" }} />,
       href: "/stocks",
     },
 
     {
       title: "transaction",
-      icon: <PaymentsIcon sx={{ color: '#71717A' }} />,
+      icon: <PaymentsIcon sx={{ color: "#71717A" }} />,
       href: "#",
     },
   ];

@@ -5,7 +5,7 @@ import { Providers } from "./providers";
 import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({
-  subsets: ["latin"]
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -20,13 +20,11 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-    <html lang="en">
-      <body className={inter.className}>
-        <Providers>
-          {children}
-        </Providers>
+      <html lang="en">
+        <body className={inter.className}>
+          <Providers>{children}</Providers>
         </body>
-    </html>
+      </html>
     </ClerkProvider>
   );
 }

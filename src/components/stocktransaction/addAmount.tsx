@@ -28,7 +28,15 @@ interface amountDataType {
   total: number;
 }
 
-export const AddAmount = ({previousTotal, setIsAdded} : {previousTotal: number; setIsAdded: Function;}) => {
+export const AddAmount = ({
+  previousTotal,
+  previousId,
+  setIsAdded,
+}: {
+  previousTotal: number;
+  previousId: string;
+  setIsAdded: Function;
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [amountData, setAmountData] = useState({
     date: "",
@@ -39,12 +47,12 @@ export const AddAmount = ({previousTotal, setIsAdded} : {previousTotal: number; 
     soldAmount: 0,
     total: 0,
   });
-  const [dailyExpenditure, setDailyExpenditure] = useState({ })
+  const [dailyExpenditure, setDailyExpenditure] = useState({});
   let totalAmount = 0;
 
   const updateStocks = (key: string, value: number) => {
-    if (key === 'soldAmount') {
-      if(amountData.openingAmount < amountData.loadAmount){
+    if (key === "soldAmount") {
+      if (amountData.openingAmount < amountData.loadAmount) {
         Swal.fire({
           icon: "error",
           title: "oops...",
@@ -54,7 +62,7 @@ export const AddAmount = ({previousTotal, setIsAdded} : {previousTotal: number; 
         });
         return;
       }
-      totalAmount = (amountData.openingAmount - amountData.loadAmount) + (value);
+      totalAmount = amountData.openingAmount - amountData.loadAmount + value;
     }
     // if(key === 'openingAmount'){
     //   setAmountData({ ...amountData, [key]: amountData.openingAmount + value, total: totalAmount });
@@ -63,10 +71,7 @@ export const AddAmount = ({previousTotal, setIsAdded} : {previousTotal: number; 
     setAmountData({ ...amountData, [key]: value, total: totalAmount });
   };
 
-  const updateDailyExpenditure = (key: string, value: number) => {
-
-  }
-
+  const updateDailyExpenditure = (key: string, value: number) => {};
 
   const addAmountData = async () => {
     if (
@@ -86,8 +91,8 @@ export const AddAmount = ({previousTotal, setIsAdded} : {previousTotal: number; 
       return;
     }
     try {
-      await addOpeningAmount(amountData.total);
-      const res = await axios.post('/api/stocktransaction', amountData);
+      await addOpeningAmount(previousId, amountData.total);
+      const res = await axios.post("/api/stocktransaction", amountData);
       if (res.data.error) {
         Swal.fire({
           icon: "error",
@@ -118,7 +123,6 @@ export const AddAmount = ({previousTotal, setIsAdded} : {previousTotal: number; 
           total: 0,
         });
       }
-      console.log(res)
     } catch (error) {
       console.log(error);
       Swal.fire({
@@ -129,11 +133,11 @@ export const AddAmount = ({previousTotal, setIsAdded} : {previousTotal: number; 
         timer: 1000,
       });
     }
-  }
+  };
 
   useEffect(() => {
     setAmountData({ ...amountData, openingAmount: previousTotal });
-  },[previousTotal])
+  }, [previousTotal]);
 
   return (
     <>
@@ -147,9 +151,12 @@ export const AddAmount = ({previousTotal, setIsAdded} : {previousTotal: number; 
         style={{ width: "600px" }}
       >
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">Add Stock</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1">Add Transaction data</ModalHeader>
           <ModalBody>
-            <StocksOptions amountData={amountData} updateStocks={updateStocks} />
+            <StocksOptions
+              amountData={amountData}
+              updateStocks={updateStocks}
+            />
             <p>Total: {amountData.total}</p>
           </ModalBody>
           <ModalFooter>
@@ -162,7 +169,7 @@ export const AddAmount = ({previousTotal, setIsAdded} : {previousTotal: number; 
                 addAmountData();
               }}
             >
-              Add Stock
+              Add Data
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -171,8 +178,7 @@ export const AddAmount = ({previousTotal, setIsAdded} : {previousTotal: number; 
   );
 };
 
-const StocksOptions = ({amountData, updateStocks }: stockData) => {
-
+const StocksOptions = ({ amountData, updateStocks }: stockData) => {
   return (
     <div className="grid gap-4">
       <Input
@@ -189,7 +195,9 @@ const StocksOptions = ({amountData, updateStocks }: stockData) => {
         variant="bordered"
         value={`${amountData.openingAmount}`}
         min={0}
-        onChange={(e) => updateStocks("openingAmount", parseInt(e.target.value))}
+        onChange={(e) =>
+          updateStocks("openingAmount", parseInt(e.target.value))
+        }
       />
       <div className="flex items-center gap-3">
         <Input

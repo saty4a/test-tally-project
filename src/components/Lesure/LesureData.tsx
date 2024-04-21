@@ -14,13 +14,20 @@ import { getStocknames } from "../stocks/data";
 import { AddAmount } from "../stocktransaction/addAmount";
 import { getOpeningAmount } from "../openingAmountApiCalls/data";
 import { AddOpeningAmount } from "../openingamount/addOpeningAmount";
+import { useGlobalAmountContext } from "../layout/openingAmountContext";
+import dayjs from "dayjs";
 
-interface openingDataType {
+export interface openingDataType {
   id: string;
+  currentAccount: number;
+  cbfs: number;
+  cash: number;
+  others: number;
   openingAmount: number;
   createdAt: Date;
   gst1: number;
   gst2: number;
+  closingAmount: number;
 }
 
 const LesureData = () => {
@@ -35,14 +42,19 @@ const LesureData = () => {
     soldAmount: 0,
     total: 0,
   });
+  const { previousAmount, setPreviousAmount } = useGlobalAmountContext();
   const [previousTotal, setPreviousTotal] = useState<openingDataType>({
     id: "",
+    currentAccount: 0,
+    cbfs: 0,
+    cash: 0,
+    others: 0,
     openingAmount: 0,
+    closingAmount: 0,
     createdAt: new Date(),
     gst1: 0,
     gst2: 0,
   });
-  const [stockData, setStockData] = useState({});
 
   let ModifiedStockNames: any[] = [];
   const StockCodes = [
@@ -123,8 +135,9 @@ const LesureData = () => {
   useEffect(() => {
     fetchStockNames();
     fetchTransactionData();
-    getOpeningAmount().then((res) => {
+    getOpeningAmount().then((res: any) => {
       setPreviousTotal(res?.data);
+      setPreviousAmount(res?.data);
     });
     setIsAdded(false);
   }, [setIsAdded, isAdded]);
@@ -135,25 +148,43 @@ const LesureData = () => {
         <div className="flex gap-3 justify-between lg:justify-start items-center my-3">
           <p className="">Opening Data</p>
           <AddOpeningAmount
-            previousTotal={previousTotal}
+            previousTotal={previousAmount}
             setIsAdded={setIsAdded}
           />
         </div>
         <div>
-        <Table isCompact={true} className="w-[20rem]" aria-label="table for stock transaction">
-          <TableHeader>
-            <TableColumn>openingAmount</TableColumn>
-            <TableColumn>GST 1</TableColumn>
-            <TableColumn>GST 2</TableColumn>
-          </TableHeader>
-          <TableBody emptyContent={"No rows to display."}>
-            <TableRow>
-              <TableCell>{previousTotal?.openingAmount}</TableCell>
-              <TableCell>{previousTotal?.gst1}</TableCell>
-              <TableCell>{previousTotal?.gst2}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+          <Table
+            isCompact={true}
+            className=""
+            aria-label="table for stock transaction"
+          >
+            <TableHeader>
+              <TableColumn>Date</TableColumn>
+              <TableColumn>openingAmount</TableColumn>
+              <TableColumn>currentAccount</TableColumn>
+              <TableColumn>cbfs</TableColumn>
+              <TableColumn>cash</TableColumn>
+              <TableColumn>others</TableColumn>
+              <TableColumn>closingAmount</TableColumn>
+              <TableColumn>GST 1</TableColumn>
+              <TableColumn>GST 2</TableColumn>
+            </TableHeader>
+            <TableBody emptyContent={"No rows to display."}>
+              <TableRow>
+                <TableCell>
+                  {dayjs(previousAmount?.createdAt).format("DD/MM/YYYY")}
+                </TableCell>
+                <TableCell>{previousAmount?.openingAmount}</TableCell>
+                <TableCell>{previousAmount?.currentAccount}</TableCell>
+                <TableCell>{previousAmount?.cbfs}</TableCell>
+                <TableCell>{previousAmount?.cash}</TableCell>
+                <TableCell>{previousAmount?.others}</TableCell>
+                <TableCell>{previousAmount?.closingAmount}</TableCell>
+                <TableCell>{previousTotal?.gst1}</TableCell>
+                <TableCell>{previousTotal?.gst2}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
       </div>
       <div>
@@ -186,7 +217,8 @@ const LesureData = () => {
         <div className="flex gap-3 justify-between lg:justify-start items-center my-3">
           <p className="">Latest Stock Transaction code</p>
           <AddAmount
-            previousTotal={previousTotal.openingAmount}
+            previousId={previousAmount.id}
+            previousTotal={previousAmount.openingAmount}
             setIsAdded={setIsAdded}
           />
         </div>

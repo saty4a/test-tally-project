@@ -3,8 +3,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Input,
   Pagination,
-  Accordion,
-  AccordionItem,
   Card,
   CardBody,
   CardFooter,
@@ -13,8 +11,13 @@ import Swal from "sweetalert2";
 import { DeleteIcon } from "@/icons/table/deleteIcon";
 import dayjs from "dayjs";
 import { AddExpenses } from "./addExpenses";
-import { addOpeningAmount, getOpeningAmount } from "../openingAmountApiCalls/data";
+import {
+  addOpeningAmount,
+  getOpeningAmount,
+} from "../openingAmountApiCalls/data";
 import { deleteExpenditureData, getExpenditureData } from "./data";
+import { openingDataType } from "../Lesure/LesureData";
+import { useGlobalAmountContext } from "../layout/openingAmountContext";
 
 interface SalaryExpenditureType {
   createdAt: string;
@@ -25,7 +28,6 @@ interface SalaryExpenditureType {
 }
 
 const DailyExpenses = () => {
-  const [previousTotal, setPreviousTotal] = useState<number>(0);
   const [isAdded, setIsAdded] = useState(false);
   const [allExpenditureData, setAllExpenditureData] = useState<
     SalaryExpenditureType[]
@@ -33,6 +35,7 @@ const DailyExpenses = () => {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterValue, setFilterValue] = useState("");
+  const { previousAmount, setPreviousAmount } = useGlobalAmountContext();
 
   const fetchExpenditureData = async () => {
     try {
@@ -75,8 +78,13 @@ const DailyExpenses = () => {
             timer: 1500,
           });
           fetchExpenditureData();
-          const totalAmount = res.data.data.expenditure.openingAmount - res.data.data.expenditure.total;
-          await addOpeningAmount(previousTotal + totalAmount);
+          const totalAmount =
+            res.data.data.expenditure.openingAmount -
+            res.data.data.expenditure.total;
+          await addOpeningAmount(
+            previousAmount.id,
+            previousAmount.closingAmount + totalAmount
+          );
           setIsAdded(true);
         }
       } catch (error) {
@@ -93,7 +101,7 @@ const DailyExpenses = () => {
   const filteredItems = useMemo(() => {
     let filteredData = [...allExpenditureData];
     filteredData = filteredData.filter((data) =>
-      data?.expenditure?.date?.includes(filterValue)
+      dayjs(data?.expenditure?.date).format("DD/MM/YYYY").includes(filterValue)
     );
     return filteredData;
   }, [allExpenditureData, filterValue, setFilterValue]);
@@ -128,9 +136,9 @@ const DailyExpenses = () => {
 
   useEffect(() => {
     fetchExpenditureData();
-    getOpeningAmount().then((res) =>
-      setPreviousTotal(res?.data?.openingAmount)
-    );
+    getOpeningAmount().then((res) => {
+      setPreviousAmount(res?.data);
+    });
     setIsAdded(false);
   }, [isAdded, setIsAdded]);
 
@@ -148,7 +156,11 @@ const DailyExpenses = () => {
           onValueChange={onSearchChange}
         />
         <div className="flex gap-3">
-          <AddExpenses previousTotal={previousTotal} setIsAdded={setIsAdded} />
+          <AddExpenses
+            previousTotal={previousAmount.closingAmount}
+            previousId={previousAmount.id}
+            setIsAdded={setIsAdded}
+          />
         </div>
       </div>
       <div className="flex justify-between mx-4">
@@ -167,42 +179,36 @@ const DailyExpenses = () => {
         </label>
       </div>
       <div className="mx-4">
-        <Accordion variant="splitted">
+          <div className="flex flex-wrap justify-center gap-4">
           {items &&
             items.map((data, index) => (
-              <AccordionItem
-                key={data?.id}
-                aria-label={`Accordion ${index + 1}`}
-                subtitle="Press to expand"
-                title={dayjs(data.expenditure.date).format("DD/MM/YYYY")}
-              >
-                <Card isFooterBlurred shadow="md" className="w-fit">
-                  <CardBody>
-                    {Object.keys(data.expenditure).map((keys, index) => (
-                      <div className="flex gap-3" key={`expenditure-${index}`}>
-                        <p>{keys}: </p>
-                        {keys === "date" ? (
-                          dayjs(data.expenditure[keys]).format("DD/MM/YYYY")
-                        ) : (
-                          <p>{data.expenditure[keys]}</p>
-                        )}
-                      </div>
-                    ))}
+              <Card
+                isFooterBlurred
+                className="w-fit overflow-auto"
+                key={data.id}
+                >
+                  <CardBody className="overflow-auto">
+                  {Object.keys(data.expenditure).map((keys, index) => (
+                    <div className="flex gap-3" key={`expenditure-${index}`}>
+                      <p>{keys}: </p>
+                      {keys === "date" ? (
+                        dayjs(data.expenditure[keys]).format("DD/MM/YYYY")
+                      ) : (
+                        <p>{data.expenditure[keys]}</p>
+                      )}
+                    </div>
+                  ))}
                   </CardBody>
-                  <CardFooter className="justify-center bg-secondary">
-                    <button
-                      className=""
-                      onClick={() => {
-                        deleteData(data.id);
-                      }}
-                    >
-                      <DeleteIcon size={20} fill="#FFFFFF" />
-                    </button>
+                  <CardFooter className="justify-center mb-3 before:bg-white/10 border-white/20 border-1 overflow-auto py-1 before:rounded-xl rounded-large w-[calc(100%_-_8px)] shadow-small ml-1">
+                  <button className="" onClick={() => {
+                    deleteData(data.id);
+                  }}>
+                    <DeleteIcon size={20} fill="#FF0080" />
+                  </button>
                   </CardFooter>
                 </Card>
-              </AccordionItem>
             ))}
-        </Accordion>
+          </div>
         <div className="flex w-full justify-center my-5">
           <Pagination
             isCompact
@@ -220,27 +226,3 @@ const DailyExpenses = () => {
 };
 
 export default DailyExpenses;
-
-{
-  /* <Card
-                isFooterBlurred
-                className="w-fit overflow-auto">
-                  <CardBody className="overflow-auto">
-                  {Object.keys(data.expenditure).map((keys, index) => (
-                    <div className="flex gap-3" key={`expenditure-${index}`}>
-                      <p>{keys}: </p>
-                      {keys === "date" ? (
-                        dayjs(data.expenditure[keys]).format("DD/MM/YYYY")
-                      ) : (
-                        <p>{data.expenditure[keys]}</p>
-                      )}
-                    </div>
-                  ))}
-                  </CardBody>
-                  <CardFooter className="justify-center before:bg-white/10 border-white/20 border-1 overflow-auto py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                  <button className="" onClick={() => {}}>
-                    <DeleteIcon size={20} fill="#FF0080" />
-                  </button>
-                  </CardFooter>
-                </Card> */
-}

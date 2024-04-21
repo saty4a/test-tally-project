@@ -29,7 +29,7 @@ export const Stocks = () => {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterValue, setFilterValue] = useState("");
-  const [newfinalData, setNewFinalData] = useState({})
+  const [newfinalData, setNewFinalData] = useState({});
   let ModifiedStockNames: any[] = [];
 
   const fetchStockNames = async () => {
@@ -47,7 +47,7 @@ export const Stocks = () => {
             timer: 1500,
           });
         }
-  
+
         if (!res.data.error) {
           let obj = res.data[0];
           for (let index = 0; index < Object.values(obj).length; index++) {
@@ -77,14 +77,16 @@ export const Stocks = () => {
         }
         const newarr = ["date", ...array, ...arr1, ...arr3, "actions"];
         setTableHeaderNames(newarr);
-      })
+      });
     } catch (error) {
       console.error("Error Details:", error);
     }
   };
 
   const fetchStockData = async () => {
-    getStockDatas().then((res) => {setStockData(res?.data?.data), setNewFinalData(res?.data?.data[0])});
+    getStockDatas().then((res) => {
+      setStockData(res?.data?.data), setNewFinalData(res?.data?.data[0]);
+    });
   };
 
   const deleteData = async (id: string) => {
@@ -125,7 +127,7 @@ export const Stocks = () => {
     let filteredData = [...stockData];
 
     filteredData = filteredData.filter((data) =>
-      data.date.includes(filterValue)
+      dayjs(data?.date).format("DD/MM/YYYY").includes(filterValue)
     );
 
     return filteredData;
@@ -180,7 +182,11 @@ export const Stocks = () => {
         />
         <div className="flex gap-3">
           <AddStocksCode setIsAdded={setIsAdded} />
-          <AddStocks stockNames={stockNames} setIsAdded={setIsAdded} newfinalData={newfinalData} />
+          <AddStocks
+            stockNames={stockNames}
+            setIsAdded={setIsAdded}
+            newfinalData={newfinalData}
+          />
         </div>
       </div>
       <div className="flex justify-between my-3">

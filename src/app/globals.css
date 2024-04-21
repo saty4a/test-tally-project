@@ -9,10 +9,10 @@ body {
 }
 
 body::-webkit-scrollbar {
-	display: none;
+  display: none;
 }
 
-html{
+html {
   scroll-behavior: smooth;
 }
 
@@ -26,6 +26,6 @@ html{
   }
 }
 
-.cl-internal-n0ak4e{
+.cl-internal-n0ak4e {
   display: none;
 }

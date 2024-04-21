@@ -67,9 +67,14 @@ model StockTransactionData {
 
 model StartingAmount {
   id String                   @id @default(auto()) @map("_id") @db.ObjectId
+  currentAccount Float
+  cbfs Float
+  cash Float
+  others Float
   openingAmount Float
   gst1 Float
   gst2 Float
+  closingAmount Float
   createdAt DateTime? @default(now())
 }
 

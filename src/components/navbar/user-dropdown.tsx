@@ -1,10 +1,9 @@
-import { UserButton, useUser } from "@clerk/nextjs"
-
+import { UserButton, useUser } from "@clerk/nextjs";
 
 export const UserDropdown = () => {
-    return(
-        <div className="profile flex items-center">
-            <UserButton />
-        </div>
-    )
-}
+  return (
+    <div className="profile flex items-center">
+      <UserButton />
+    </div>
+  );
+};

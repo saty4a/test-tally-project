@@ -14,13 +14,12 @@ import {
   SelectItem,
 } from "@nextui-org/react";
 
-
 interface stockData {
   addStockData: object;
   updateStocks: Function;
 }
 
-export const AddStocksCode = ({setIsAdded}: {setIsAdded: Function}) => {
+export const AddStocksCode = ({ setIsAdded }: { setIsAdded: Function }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [addStockCode, setStockData] = useState({
     P1: "",
@@ -86,7 +85,7 @@ export const AddStocksCode = ({setIsAdded}: {setIsAdded: Function}) => {
           P5: "",
           P6: "",
           P7: "",
-        })
+        });
       }
     } catch (error) {
       Swal.fire({
@@ -126,7 +125,7 @@ export const AddStocksCode = ({setIsAdded}: {setIsAdded: Function}) => {
             </Button>
             <Button
               onClick={() => {
-                addStockCodes()
+                addStockCodes();
               }}
             >
               Add Stock

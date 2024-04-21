@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const stockData = await req.json();
-    
+
     const { userId } = auth();
 
     if (!userId) {
@@ -51,18 +51,18 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   try {
-    console.log("stock data get received");;
-    
+    console.log("stock data get received");
+
     const { userId } = auth();
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized", status: 401 });
-  }
+    }
 
     const data = await prisma.stockData.findMany({
-      orderBy:{
-        createdAt: 'desc'
-      }
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return NextResponse.json({ data: data, sucess: true, status: 200 });

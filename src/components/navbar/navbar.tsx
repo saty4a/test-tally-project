@@ -12,6 +12,7 @@ import {
 import { UserDropdown } from "./user-dropdown";
 import { usePathname } from "next/navigation";
 import { DarkModeSwitch } from "./darkmodeswitch";
+import { GlobalProvider } from "../layout/openingAmountContext";
 
 interface Props {
   children: React.ReactNode;
@@ -31,17 +32,21 @@ const NavBarWrapper = ({ children }: Props) => {
       link: "/stocks",
     },
     {
+      label: "Bank Balance",
+      link: "/bankbalance",
+    },
+    {
       label: "Transaction",
       link: "/stocktransaction",
     },
     {
       label: "Daily Expenses",
-      link: "/dailyexpenses"
+      link: "/dailyexpenses",
     },
     {
       label: "Salary Expenses",
-      link: "/salaryexpenses"
-    }
+      link: "/salaryexpenses",
+    },
   ];
 
   return (
@@ -61,38 +66,54 @@ const NavBarWrapper = ({ children }: Props) => {
         </NavbarContent>
 
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
-          <NavbarItem 
-          isActive={pathname === "/" ? true : false}
-          >
+          <NavbarItem isActive={pathname === "/" ? true : false}>
             <Link color={pathname === "/" ? "primary" : "foreground"} href="/">
               Home
             </Link>
           </NavbarItem>
-          <NavbarItem 
-          isActive={pathname === "/stocks" ? true : false}
-          >
-            <Link color={pathname === "/stocks" ? "primary" : "foreground"} href="/stocks" aria-current="page">
+          <NavbarItem isActive={pathname === "/stocks" ? true : false}>
+            <Link
+              color={pathname === "/stocks" ? "primary" : "foreground"}
+              href="/stocks"
+              aria-current="page"
+            >
               Stocks
+            </Link>
+          </NavbarItem>
+          <NavbarItem isActive={pathname === "/bankbalance" ? true : false}>
+            <Link
+              color={pathname === "/bankbalance" ? "primary" : "foreground"}
+              href="/bankbalance"
+              aria-current="page"
+            >
+              Bank Balance
             </Link>
           </NavbarItem>
           <NavbarItem
             isActive={pathname === "/stocktransaction" ? true : false}
           >
-            <Link color={pathname === "/stocktransaction" ? "primary" : "foreground"} href="/stocktransaction">
+            <Link
+              color={
+                pathname === "/stocktransaction" ? "primary" : "foreground"
+              }
+              href="/stocktransaction"
+            >
               Stock Transactions
             </Link>
           </NavbarItem>
-          <NavbarItem
-            isActive={pathname === "/dailyexpenses" ? true : false}
-          >
-            <Link color={pathname === "/dailyexpenses" ? "primary" : "foreground"} href="/dailyexpenses">
+          <NavbarItem isActive={pathname === "/dailyexpenses" ? true : false}>
+            <Link
+              color={pathname === "/dailyexpenses" ? "primary" : "foreground"}
+              href="/dailyexpenses"
+            >
               Daily Expenses
             </Link>
           </NavbarItem>
-          <NavbarItem
-            isActive={pathname === "/salaryexpenses" ? true : false}
-          >
-            <Link color={pathname === "/salaryexpenses" ? "primary" : "foreground"} href="/salaryexpenses">
+          <NavbarItem isActive={pathname === "/salaryexpenses" ? true : false}>
+            <Link
+              color={pathname === "/salaryexpenses" ? "primary" : "foreground"}
+              href="/salaryexpenses"
+            >
               Salary Expenses
             </Link>
           </NavbarItem>
@@ -107,14 +128,19 @@ const NavBarWrapper = ({ children }: Props) => {
               key={`${item}-${index}`}
               isActive={pathname === item.link ? true : false}
             >
-              <Link className="w-full" color={pathname === item.link ? "primary" : "foreground"} href={item.link} size="lg">
+              <Link
+                className="w-full"
+                color={pathname === item.link ? "primary" : "foreground"}
+                href={item.link}
+                size="lg"
+              >
                 {item.label}
               </Link>
             </NavbarMenuItem>
           ))}
         </NavbarMenu>
       </Navbar>
-      {children}
+      <GlobalProvider>{children}</GlobalProvider>
     </div>
   );
 };
