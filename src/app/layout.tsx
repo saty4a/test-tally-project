@@ -9,8 +9,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Personal Tally",
+  title: "Madan Mohan Bharat Gas",
   description: "A website to manage your expenses",
+  icons: {
+    icon: "/bharat-gas.jpg"
+  }
 };
 
 export default function RootLayout({

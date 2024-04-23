@@ -3,8 +3,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Input,
   Pagination,
-  Accordion,
-  AccordionItem,
   Card,
   CardBody,
   CardFooter,
@@ -145,7 +143,6 @@ const SalaryExpenses = () => {
   useEffect(() => {
     fetchSalaryExpenditureData();
     getOpeningAmount().then((res) =>
-      // setPreviousTotal(res?.data?.openingAmount)
       setPreviousAmount(res?.data)
     );
     setIsAdded(false);

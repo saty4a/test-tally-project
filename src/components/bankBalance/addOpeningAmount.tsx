@@ -149,18 +149,6 @@ export const AddOpeningAmount = ({
     }
   };
 
-  // useEffect(() => {
-  //   const timeId = setTimeout(() => {
-  //     totalRef.current =
-  //       openingData.cash +
-  //       openingData.cbfs +
-  //       openingData.currentAccount +
-  //       openingData.openingAmount +
-  //       openingData.others;
-  //   }, 1000);
-  //   return () => clearTimeout(timeId);
-  // }, [openingData, setOpeningData]);
-
   const total = useMemo(() => {
     if(countRef.current > 0){
       return (

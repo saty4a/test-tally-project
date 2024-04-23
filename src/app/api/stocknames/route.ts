@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     }
 
     const checkStockName = await prisma.stocksName.findMany();
-    console.log(checkStockName);
+
     if (checkStockName?.length > 0) {
       const updatedStockName = await prisma.stocksName.update({
         where: {

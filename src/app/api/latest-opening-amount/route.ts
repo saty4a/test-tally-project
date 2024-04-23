@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
         orderBy: {
           createdAt: "desc",
         },
+        take: 1,
       });
       return NextResponse.json(openingAmount[0]);
     } catch (error) {

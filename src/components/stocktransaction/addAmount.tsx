@@ -64,10 +64,6 @@ export const AddAmount = ({
       }
       totalAmount = amountData.openingAmount - amountData.loadAmount + value;
     }
-    // if(key === 'openingAmount'){
-    //   setAmountData({ ...amountData, [key]: amountData.openingAmount + value, total: totalAmount });
-    //   return;
-    // }
     setAmountData({ ...amountData, [key]: value, total: totalAmount });
   };
 
@@ -166,7 +162,6 @@ export const AddAmount = ({
             </Button>
             <Button
               onClick={() => {
-                // addStocksData();
                 addAmountData();
               }}
             >

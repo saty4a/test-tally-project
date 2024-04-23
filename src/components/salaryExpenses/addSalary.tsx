@@ -40,11 +40,9 @@ export const AddSalary = ({
     openingAmount: 0,
     total: 0,
   });
-  // const price = useRef(0);
   const type = useRef<string>("");
 
   const updateSalaryExpenditure = (value: number) => {
-    // price.current = value;
     setSalaryAmountData({ ...salaryAmountData, [type.current]: value });
   };
 

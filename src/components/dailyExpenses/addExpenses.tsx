@@ -40,11 +40,9 @@ export const AddExpenses = ({
     openingAmount: 0,
     total: 0,
   });
-  // const price = useRef(0);
   const type = useRef<string>("");
 
   const updateDailyExpenditure = (value: number) => {
-    // price.current = value;
     setAmountData({ ...amountData, [type.current]: value });
   };
 
@@ -210,14 +208,12 @@ const StocksOptions = ({
           onChange={(e) => {
             type.current = e.target.value;
           }}
-          // placeholder="Daily Expenditure type"
         />
         <Input
           required
           type="number"
           className="h-[3rem]"
           label="Expenditure Amount"
-          // placeholder="Expenditure Amount"
           variant="bordered"
           min={0}
           onChange={(e) => {

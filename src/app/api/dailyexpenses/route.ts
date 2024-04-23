@@ -2,10 +2,6 @@ import prisma from "@/app/utils/connect";
 import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 
-// type Expenses {
-//     dailyExpenses: object;
-// }
-
 export async function POST(req: NextRequest) {
   try {
     console.log("post request received");
