@@ -73,14 +73,12 @@ export const AddAmount = ({
     if (
       amountData.date === "" ||
       amountData.openingAmount === 0 ||
-      amountData.soldAmount === 0 ||
-      amountData.soldCylinders === 0 ||
       amountData.total === 0
     ) {
       Swal.fire({
         icon: "error",
         title: "oops...",
-        text: `required fields should be`,
+        text: `required fields should be filled`,
         showConfirmButton: false,
         timer: 1000,
       });
