@@ -13,6 +13,7 @@ import { UserDropdown } from "./user-dropdown";
 import { usePathname } from "next/navigation";
 import { DarkModeSwitch } from "./darkmodeswitch";
 import { GlobalProvider } from "../layout/openingAmountContext";
+import { Payment } from "./payment";
 
 interface Props {
   children: React.ReactNode;
@@ -119,6 +120,7 @@ const NavBarWrapper = ({ children }: Props) => {
           </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="end">
+          <Payment />
           <DarkModeSwitch />
           <UserDropdown />
         </NavbarContent>
